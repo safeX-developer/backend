@@ -1,13 +1,13 @@
-const { ethers } = require("ethers");
+const { ethers, npmddddJsonRpcProvider, Contract } = require("ethers");
 const P2PTradeABI = require("../abis/P2PTrade.json");
 const config = require("../config");
 const contractAddress = config.blockchain.contractAddress;
 
 class TradeController {
   constructor() {
-    this.provider = new ethers.providers.JsonRpcProvider(config.blockchain.rpcUrl);
+    this.provider = new  JsonRpcProvider(config.blockchain.rpcUrl);
     
-    this.contract = new ethers.Contract(contractAddress, P2PTradeABI, this.provider);
+    this.contract = new Contract(contractAddress, P2PTradeABI, this.provider);
   }
 
   // Utility function to check if the user (wallet address in req.id) is the admin.
