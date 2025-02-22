@@ -3,7 +3,6 @@ const cors = require("cors");
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const routeManager = require('./routes/route.manager.js')
-
 const { createsocket } = require("./socket");
 const { createServer } = require("node:http");
 
@@ -14,8 +13,6 @@ app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-
-
 
 const server = createServer(app);
 async function main() {
@@ -52,7 +49,7 @@ app.use(function (req, res, next) {
 
 mongoose.set('strictQuery', false);
 //   const dbUri = `mongodb+srv://highscoreteh:AoUXugCyZEfpBmMx@cluster0.xmpkpjc.mongodb.net/cat3poker?retryWrites=true&w=majority`
-const dbUri = `mongodb://localhost:27017/cat3poker`;
+const dbUri = `mongodb://localhost:27017/safex`;
 mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => console.log('Database connected'))
     .catch((err) => console.log(err))

@@ -1,7 +1,4 @@
 const Profile = require("../model/profile.model")
-const UserAuth = require("../model/auth.model")
-const bcrypt = require("bcryptjs")
-const validator = require("validator")
 
 class ProfileController{
   constructor(){
@@ -9,12 +6,12 @@ class ProfileController{
   }
   async handleProfile(req, res){
     try{
-        const user_id = req.id
-        if(!user_id){
+        const userId = req.params
+        if(!userId){
           return res.status(403).json({error: "Invalid user ID"})
         }
         else{
-          const user = await Profile.findOne({user_id})
+          const user = await Profile.findOne({userId: userId.address})
           if(!user){
               return res.status(403).json({error: "User not found"})
           }
@@ -26,6 +23,16 @@ class ProfileController{
       return res.status(403).json({error: "Server Error"})
     }
   }
+  async register(req, res){
+    try{
+      const { register } = req.body
+      console.log(register)
+    }
+    catch(err){
+      console.log(err)
+      return res.status(403).json({error: "Server Error"})
+    }
+  } 
 }
 
 
