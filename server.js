@@ -22,7 +22,7 @@ main();
 
 // ============================= Landing home server =======================
 app.get("/", (req, res) => {
-    res.send("Welcome to cat3 Poker backend server");
+    res.send("Welcome to safeX backend server");
 })
 
 app.use(express.text());
