@@ -1,4 +1,11 @@
 const Profile = require("../model/profile.model")
+const countries = require('i18n-iso-countries');
+const { getCode } = require('country-list');
+countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
+
+function isValidCountry(input) {
+  return countries.isValid(input.toUpperCase()) || getCode(input) !== undefined;
+}
 
 class ProfileController{
   constructor(){
@@ -7,15 +14,15 @@ class ProfileController{
   async handleProfile(req, res){
     try{
         const userId = req.params
-        if(!userId){
+        if(!userId?.address){
           return res.status(403).json({error: "Invalid user ID"})
         }
         else{
-          const user = await Profile.findOne({userId: userId.address})
+          const user = await Profile.findOne({userId: userId?.address})
           if(!user){
               return res.status(403).json({error: "User not found"})
           }
-          return res.status(200).json({user})
+          return res.status(200).json(user)
         }
     }
     catch(err){
@@ -26,7 +33,24 @@ class ProfileController{
   async register(req, res){
     try{
       const { register } = req.body
-      console.log(register)
+      const exist = await Profile.findOne({userId: register?.userId})
+      if(exist){
+        return res.status(500).json({error: "Already regsitered with this wallet address"})
+      }
+      if(!register?.Fname){
+        return res.status(500).json({error: "Invalid Full name"})
+      }
+      if(!register?.username){
+        return res.status(500).json({error: "Invalid Username"})
+      }
+      if(!isValidCountry(register.country)){
+        return res.status(500).json({error: "Country does not exist"})
+      }
+      if(!register?.address){
+        return res.status(500).json({error: "Invalid Address"})
+      }
+      const data = await Profile.create(register)
+      return res.status(200).json(data)
     }
     catch(err){
       console.log(err)
