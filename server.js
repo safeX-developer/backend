@@ -1,34 +1,34 @@
 const express = require("express");
-const cors = require("cors");
+// const cors = require("cors");
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const routeManager = require('./routes/route.manager.js')
-const { createsocket } = require("./socket");
-const { createServer } = require("node:http");
+// const bodyParser = require('body-parser');
+// const routeManager = require('./routes/route.manager.js')
+// const { createsocket } = require("./socket");
+// const { createServer } = require("node:http");
 
 // ============ Initilize the app ========================
-require("dotenv").config();
+// require("dotenv").config();
 const app = express();
-app.use(express.json({ limit: '50mb' }));
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+// app.use(express.json({ limit: '50mb' }));
+// app.use(bodyParser.json({ limit: '50mb' }));
+// app.use(express.urlencoded({ extended: true }));
+// app.use(cors());
 
-const server = createServer(app);
-async function main() {
-    createsocket(server);
-}
-main();
+// const server = createServer(app);
+// async function main() {
+//     createsocket(server);
+// }
+// main();
 
 // ============================= Landing home server =======================
 app.get("/", (req, res) => {
     res.send("Welcome to safeX backend server");
 })
 
-app.use(express.text());
+// app.use(express.text());
 
 // application routes
-routeManager(app)
+// routeManager(app)
  
 app.use(function (err, req, res, next) {
     res.status(500).json({
@@ -54,6 +54,6 @@ mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => console.log('Database connected'))
     .catch((err) => console.log(err))
 const PORT = process.env.PORT || 8000;
-server.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log("Running on port " + PORT)
 })
