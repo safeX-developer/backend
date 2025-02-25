@@ -4,7 +4,7 @@ const requireAuth = require('../../middleware/requireAuth')
 const ProfileController = require('../../controllers/profile.controller')
 const controller = new ProfileController()
  
-router.get('/user/:address', controller.handleProfile)
-router.post('/register', controller.register)
+router.get('/user/:address', controller.handleProfile.bind(controller))
+router.post('/register', controller.register.bind(controller))
 
 module.exports = router

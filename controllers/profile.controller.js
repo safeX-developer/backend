@@ -2,14 +2,20 @@ const Profile = require("../model/profile.model")
 const countries = require('i18n-iso-countries');
 const { getCode } = require('country-list');
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
+const jwt = require("jsonwebtoken");
 
 function isValidCountry(input) {
   return countries.isValid(input.toUpperCase()) || getCode(input) !== undefined;
 }
 
+
+
 class ProfileController{
   constructor(){
     this.user = []
+  }
+  createToken(_id){
+    return jwt.sign({ _id }, `InenwiNIWb39Nneol?s.mee39nshoosne(3n)`, { expiresIn: '1d' })
   }
   async handleProfile(req, res){
     try{
@@ -20,9 +26,10 @@ class ProfileController{
         else{
           const user = await Profile.findOne({userId: userId?.address})
           if(!user){
-              return res.status(403).json({error: "User not found"})
+              return res.status(200).json({error: "User not found"})
           }
-          return res.status(200).json(user)
+          const token = this.createToken(userId?.address)
+          return res.status(200).json({token,user})
         }
     }
     catch(err){
@@ -49,8 +56,9 @@ class ProfileController{
       if(!register?.address){
         return res.status(500).json({error: "Invalid Address"})
       }
-      const data = await Profile.create(register)
-      return res.status(200).json(data)
+      const user = await Profile.create(register)
+      const token = this.createToken(register?.userId)
+      return res.status(200).json({token,user})
     }
     catch(err){
       console.log(err)
