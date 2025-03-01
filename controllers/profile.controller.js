@@ -2,12 +2,12 @@ const Profile = require("../model/profile.model")
 const countries = require('i18n-iso-countries');
 const { getCode } = require('country-list');
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
+const RewardModel = require("../model/reward.model");
 const jwt = require("jsonwebtoken");
 
 function isValidCountry(input) {
   return countries.isValid(input.toUpperCase()) || getCode(input) !== undefined;
 }
-
 
 
 class ProfileController{
@@ -56,7 +56,9 @@ class ProfileController{
       if(!register?.address){
         return res.status(500).json({error: "Invalid Address"})
       }
+      
       const user = await Profile.create(register)
+      await RewardModel.create({userId: register?.userId})
       const token = this.createToken(register?.userId)
       return res.status(200).json({token,user})
     }

@@ -1,50 +1,69 @@
+const RewardModel = require("../model/reward.model");
 
 class Rewards{
     constructor(){
-        this.dailyRewards = [
-            {day: 1, rewards: 100}, 
-            {day: 2, rewards: 200},
-            {day: 3, rewards: 300}, 
-            {day: 4, rewards: 400}, 
-            {day: 5, rewards: 500}, 
-            {day: 6, rewards: 600}, 
-            {day: 7, rewards: 700}, 
-            {day: 8, rewards: 800}, 
-            {day: 9, rewards: 900}, 
-            {day: 10, rewards: 1000}, 
-            {day: 11, rewards: 1100}, 
-            {day: 12, rewards: 1200}, 
-            {day: 12, rewards: 1300}, 
-            {day: 14, rewards: 1400}, 
-            {day: 15, rewards: 1500}, 
-            {day: 16, rewards: 1600}, 
-            {day: 17, rewards: 1700}, 
-            {day: 18, rewards: 1800}, 
-            {day: 19, rewards: 1900}, 
-            {day: 20, rewards: 2000}, 
-            {day: 21, rewards: 2100}, 
-            {day: 22, rewards: 2200}, 
-            {day: 23, rewards: 2300}, 
-            {day: 24, rewards: 2400}, 
-            {day: 25, rewards: 2500}, 
-            {day: 26, rewards: 2600}, 
-            {day: 27, rewards: 2700}, 
-            {day: 28, rewards: 2800}, 
-            {day: 29, rewards: 2900}, 
-            {day: 30, rewards: 3000}, 
-        ]
+        this.resil = []
     }
-    async rewards(req, res){
+    async climRewards(req, res){
         try{
             const userId = req.id
-            let reward = this.dailyRewards
-            return res.status(200).json(reward)
+            const data = req.body
+             await RewardModel.updateOne({userId, "reward.day": data?.day},{
+                $set: {
+                    "reward.$.isClaimed": true
+                }
+            })
+            await RewardModel.updateOne({userId},{
+                 $inc: { balance: data?.rewards } 
+            })
+            const user = await RewardModel.findOne({userId})
+            return res.status(200).json(user)
         }
         catch(err){
             console.log(err)
             return res.status(404).json({error: "Something went wrong"})
         }
-       
+    }
+    isToday(date) {
+        const today = new Date();
+        return date.getFullYear() === today.getFullYear() &&
+               date.getMonth() === today.getMonth() &&
+               date.getDate() === today.getDate();
+    }
+    getNext30Days(rewards){
+        const dates = [];
+        const today = new Date();
+        for (let i = 0; i < 30; i++) {
+          const time = new Date(today);
+          time.setDate(today.getDate() + i);
+          let re = rewards[i]
+          dates.push({...re,time }); 
+        }
+        return dates;
+    };
+      
+    async rewards(req, res){
+        try{
+            const userId = req.id
+            const user = await RewardModel.findOne({userId})
+            let Los = this.getNext30Days(user?.reward)
+            Los.forEach((item)=>{
+                if(this.isToday(item.time)){
+                    if(!item.isClaimed){
+                        item.canClaim = true
+                    } 
+                }
+            })
+            
+            await RewardModel.updateOne({userId}, {
+                reward: Los
+            })
+            return res.status(200).json({reward:Los, user})
+        }
+        catch(err){
+            console.log(err)
+            return res.status(404).json({error: "Something went wrong"})
+        }
     }
 }
 
