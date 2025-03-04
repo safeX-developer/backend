@@ -17,6 +17,26 @@ class ProfileController{
   createToken(_id){
     return jwt.sign({ _id }, `InenwiNIWb39Nneol?s.mee39nshoosne(3n)`, { expiresIn: '1d' })
   }
+  async handleInviteeRewards(code, invite){
+    const invitee = await RewardModel.findOne({ referalCode: code})
+    // const user = await RewardModel.findOne({userId: invite?.userId})
+    if(!invitee) return 
+    const invit = {
+      number: invitee?.referals?.length + 1,
+      username: invite?.username,
+      address: invite?.userId,
+      status: "complete",
+      amount: 100
+    }
+
+     await RewardModel.findOneAndUpdate({ referalCode: code},
+      { 
+        $push: { referals: invit } , 
+        $inc: { balance: 100 }
+      },
+      { new: true, upsert: true } // Return updated doc, create if not exists
+    )
+  }
   async handleProfile(req, res){
     try{
         const userId = req.params
@@ -40,6 +60,10 @@ class ProfileController{
   async register(req, res){
     try{
       const { register } = req.body
+      const {code} = req.params
+      if(code){
+        await  this.handleInviteeRewards(code, register)
+      }
       const exist = await Profile.findOne({userId: register?.userId})
       if(exist){
         return res.status(500).json({error: "Already regsitered with this wallet address"})

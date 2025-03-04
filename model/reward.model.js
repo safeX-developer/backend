@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema
+const { generateRandomString } = require("../util/config");
 
 const Userschema = new schema({
     userId: {
@@ -49,6 +50,21 @@ const Userschema = new schema({
     lastClaimedDate: {
         type: Date,
         default: Date()
+    },
+    referalCode: {
+        type: String,
+        default: generateRandomString()
+    },
+    referalProp :{
+        type: Object,
+        default: {
+            total: 0,
+            pending: 0,
+            completed: 0
+        }
+    },
+    referals: {
+        type: Array
     }
 }, { timestamp : true})
 

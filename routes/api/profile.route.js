@@ -5,6 +5,6 @@ const ProfileController = require('../../controllers/profile.controller')
 const controller = new ProfileController()
  
 router.get('/user/:address', controller.handleProfile.bind(controller))
-router.post('/register', controller.register.bind(controller))
+router.post('/register/:code', controller.register.bind(controller))
 
 module.exports = router

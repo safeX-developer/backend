@@ -41,7 +41,6 @@ class Rewards{
         }
         return dates;
     };
-      
     async rewards(req, res){
         try{
             const userId = req.id
@@ -59,6 +58,21 @@ class Rewards{
                 reward: Los
             })
             return res.status(200).json({reward:Los, user})
+        }
+        catch(err){
+            console.log(err)
+            return res.status(404).json({error: "Something went wrong"})
+        }
+    }
+    async useReferralCode(req, res){
+        try{
+            const {code} = req.body
+            const exist = await RewardModel.findOne({referalCode:code})
+            if(!exist){
+                return res.status(404).json({error: "Invalid invite code"})
+            }
+            const invitee = exist?.userId
+            
         }
         catch(err){
             console.log(err)

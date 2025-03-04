@@ -6,6 +6,7 @@ const controller = new Rewards()
  
 router.get('/daily',requireAuth, controller.rewards.bind(controller))
 router.post('/claim',requireAuth, controller.climRewards.bind(controller))
+router.post('/code-reg', controller.useReferralCode.bind(controller))
 
 
 module.exports = router
