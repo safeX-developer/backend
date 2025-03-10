@@ -1,4 +1,4 @@
-const { ethers, npmddddJsonRpcProvider, Contract } = require("ethers");
+const { ethers, JsonRpcProvider, Contract } = require("ethers");
 const P2PTradeABI = require("../abis/P2PTrade.json");
 const config = require("../config");
 const contractAddress = config.blockchain.contractAddress;
