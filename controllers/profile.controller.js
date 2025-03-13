@@ -91,6 +91,32 @@ class ProfileController{
       return res.status(403).json({error: "Server Error"})
     }
   } 
+  async deactivateUser(req, res){
+    try{
+      const userId = req.id
+      console.log(userId)
+      const { register } = req.body
+      if(!register?.Fname){
+        return res.status(500).json({error: "Invalid Full name"})
+      }
+      if(!register?.username){
+        return res.status(500).json({error: "Invalid Username"})
+      }
+      if(!isValidCountry(register.country)){
+        return res.status(500).json({error: "Country does not exist"})
+      }
+      if(!register?.address){
+        return res.status(500).json({error: "Invalid Address"})
+      }
+      // await Profile.updateOne({userId},{
+        
+      // })
+    }
+    catch(err){
+      console.log(err)
+      return res.status(403).json({error: "Server Error"})
+    }
+  }
 }
 
 

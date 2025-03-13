@@ -48,8 +48,8 @@ app.use(function (req, res, next) {
 });
 
 mongoose.set('strictQuery', false);
-  const dbUri = `mongodb+srv://highscoreteh:AoUXugCyZEfpBmMx@cluster0.xmpkpjc.mongodb.net/safex?retryWrites=true&w=majority`
-// const dbUri = `mongodb://localhost:27017/safex`;
+//   const dbUri = `mongodb+srv://highscoreteh:AoUXugCyZEfpBmMx@cluster0.xmpkpjc.mongodb.net/safex?retryWrites=true&w=majority`
+const dbUri = `mongodb://localhost:27017/safex`;
 mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => console.log('Database connected'))
     .catch((err) => console.log(err))
