@@ -91,11 +91,10 @@ class ProfileController{
       return res.status(403).json({error: "Server Error"})
     }
   } 
-  async deactivateUser(req, res){
+  async changeDetails(req, res){
     try{
       const userId = req.id
-      console.log(userId)
-      const { register } = req.body
+      const register  = req.body
       if(!register?.Fname){
         return res.status(500).json({error: "Invalid Full name"})
       }
@@ -108,14 +107,34 @@ class ProfileController{
       if(!register?.address){
         return res.status(500).json({error: "Invalid Address"})
       }
-      // await Profile.updateOne({userId},{
-        
-      // })
+      await Profile.updateOne({userId},{
+        country: register.country,
+        username: register?.username, 
+        Fname: register?.Fname, 
+        address:register?.address, 
+      })
+      const user = await Profile.findOne({userId})
+      return res.status(200).json(user)
     }
     catch(err){
       console.log(err)
       return res.status(403).json({error: "Server Error"})
     }
+  }
+  async setNewEmail(req, res){
+    try{
+      const email = req.body
+      const userId = req.id
+      console.log(email)
+
+    }
+    catch(err){
+      console.log(err)
+      return res.status(403).json({error: "Server Error"})
+    }
+  }
+  async deactivateUser(req, res){
+
   }
 }
 

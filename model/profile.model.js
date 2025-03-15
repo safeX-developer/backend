@@ -24,6 +24,9 @@ const Userschema = new schema({
         type: String,
         required: true,
     },
+    isFaSecret:{
+        type: String
+    },
     is_suspend: {
         type: Boolean,
     }
